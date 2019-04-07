@@ -54,40 +54,29 @@ Solution BFS_Graph(PuzzleState* init){
 ///    expansion order of the nodes.                                         ///
 ///  - The algorithm is not optimal.                                         ///
 ////////////////////////////////////////////////////////////////////////////////
-//TODO: verificar se precisa usar reopening 
 Solution GreedyBestFirstSearch(PuzzleState * init){
     Solution ans = Solution(init);
-    if (init->isGoal()){
-        ans.finish(0);
-        return ans;
-    }
     std::priority_queue <Node, std::vector<Node>, GBFSComp> open;
     open.push(Node(init, 0));
     std::set <ULL> closed;
-    closed.insert(init->getId());
-
     while (! open.empty()){
         Node current = open.top();
         open.pop();
-        ans.incExpanded();
-        for (State* s : current.state->succ()){
-            Node suc = Node(s, current.cost + 1);
+        if (closed.find(current.state->getId()) == closed.end()){ // not in closed
+            ans.incExpanded();
+            closed.insert(current.state->getId());
+            if (current.state->isGoal()){
 
-            if (s->heuristic() == 0){
-                bool a = s->isGoal();
-            }
-            if (s->isGoal()){
-                ans.updateAvg(s->heuristic());
-                ans.finish(suc.cost);
+                ans.finish(current.cost);
                 return ans;
             }
-
-            if (closed.find(s->getId()) == closed.end()){ // not in closed
+            for (State* s : current.state->succ()) {
                 ans.updateAvg(s->heuristic());
-                closed.insert(s->getId());
+                Node suc = Node(s, current.cost + 1);
                 open.push(suc);
             }
         }
+
     }
     ans.finish(INT_MAX); // infinite
     return  ans;//
@@ -102,34 +91,34 @@ Solution GreedyBestFirstSearch(PuzzleState * init){
 ////////////////////////////////////////////////////////////////////////////////
 Solution AStar(PuzzleState* init){
     Solution ans = Solution(init);
-    if (init->isGoal()){
-        ans.finish(0);
-        return ans;
-    }
     std::priority_queue <Node, std::vector<Node>, AstarComp> open;
     open.push(Node(init, 0));
     std::set <ULL> closed;
-    closed.insert(init->getId());
     while (! open.empty()){
         Node current = open.top();
         open.pop();
-        ans.incExpanded();
-        for (State* s : current.state->succ()){
-            Node suc = Node(s, current.cost + 1);
-            if (s->isGoal()){
-                ans.updateAvg(s->heuristic());
-                ans.finish(suc.cost);
+        if (closed.find(current.state->getId()) == closed.end()){ // not in closed
+            ans.incExpanded();
+            closed.insert(current.state->getId());
+            if (current.state->isGoal()){
+
+                ans.finish(current.cost);
                 return ans;
             }
-
-            if (closed.find(s->getId()) == closed.end()){ // not in closed
+            for (State* s : current.state->succ()) {
                 ans.updateAvg(s->heuristic());
-                closed.insert(s->getId());
+                Node suc = Node(s, current.cost + 1);
                 open.push(suc);
             }
         }
+
     }
     ans.finish(INT_MAX); // infinite
-    return ans;
+    return  ans;//
 }
+
+
+
+
+
 
