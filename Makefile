@@ -1,6 +1,6 @@
 CXX=g++
 EXEC=main
-FLAG =-std=c++11
+FLAG =-std=c++11 -O3
 MAIN_SRC=src/main.cpp
 PUZZLE_STATE_SRC=src/PuzzleState.cpp
 SEARCH_SRC=src/searchAlgorithms.cpp
