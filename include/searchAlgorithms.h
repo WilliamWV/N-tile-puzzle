@@ -17,8 +17,10 @@
 class GBFSComp{
 public:
     bool operator() (Node a, Node b){
-
-        return a.state->heuristic() >= b.state->heuristic();
+        int hDiff = a.state->heuristic() >= b.state->heuristic();
+        if (hDiff < 0) return false;
+        else if (hDiff > 0) return true;
+        else return a.order < b.order;
     }
 };
 
@@ -27,12 +29,15 @@ public:
 class AstarComp{
 public:
     bool operator() (Node a, Node b){
-        int sub = (a.state->heuristic() + a.cost) - (b.state->heuristic() + b.cost);
-        if (sub < 0)
-            return false;
-        else if (sub > 0)
-            return true;
-        else return a.state->heuristic() >= b.state->heuristic(); // heuristic is used as tie breaker
+        int fDiff = (a.state->heuristic() + a.cost) - (b.state->heuristic() + b.cost);
+        if (fDiff < 0) return false;
+        else if (fDiff > 0) return true;
+        else {
+            int hDiff = a.state->heuristic() - b.state->heuristic();
+            if (hDiff < 0) return false;
+            else if (hDiff > 0) return true;
+            else return a.order < b.order; // heuristic is used as tie breaker
+        }
     }
 };
 Solution BFS_Graph(PuzzleState* init);

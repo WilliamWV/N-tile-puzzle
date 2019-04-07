@@ -23,12 +23,14 @@ public:
 class Node{
 
 public:
-    Node(State * state, int cost){
+    Node(State * state, int cost, ULL order){
         this->state = state;
         this->cost = cost;
+		this->order = order;
     }
     State * state;
     int cost;
+	ULL order;
 };
 
 

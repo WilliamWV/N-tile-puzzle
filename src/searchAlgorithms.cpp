@@ -13,14 +13,14 @@
 ///    have the same cost.                                                   ///
 ////////////////////////////////////////////////////////////////////////////////
 Solution BFS_Graph(PuzzleState* init){
-
+	ULL insertionOrder = 0;
     Solution ans = Solution(init);
     if (init->isGoal()){
         ans.finish(0);
         return ans;
     }
     std::deque <Node> open;
-    open.push_front(Node(init, 0));
+    open.push_front(Node(init, 0, insertionOrder++));
     std::set <ULL> closed;
     closed.insert(init->getId());
     while (! open.empty()){
@@ -28,7 +28,7 @@ Solution BFS_Graph(PuzzleState* init){
         open.pop_front();
         ans.incExpanded();
         for (State * s : current.state->succ()){
-            Node suc = Node(s, current.cost + 1);
+            Node suc = Node(s, current.cost + 1, insertionOrder++);
             if (s->isGoal()){
                 ans.updateAvg(s->heuristic());
                 ans.finish(suc.cost);
@@ -56,23 +56,24 @@ Solution BFS_Graph(PuzzleState* init){
 ////////////////////////////////////////////////////////////////////////////////
 Solution GreedyBestFirstSearch(PuzzleState * init){
     Solution ans = Solution(init);
+    ULL insertionOrder = 0;
     std::priority_queue <Node, std::vector<Node>, GBFSComp> open;
-    open.push(Node(init, 0));
+    open.push(Node(init, 0, insertionOrder++));
     std::set <ULL> closed;
     while (! open.empty()){
         Node current = open.top();
         open.pop();
         if (closed.find(current.state->getId()) == closed.end()){ // not in closed
-            ans.incExpanded();
             closed.insert(current.state->getId());
             if (current.state->isGoal()){
 
                 ans.finish(current.cost);
                 return ans;
             }
+            ans.incExpanded();
             for (State* s : current.state->succ()) {
                 ans.updateAvg(s->heuristic());
-                Node suc = Node(s, current.cost + 1);
+                Node suc = Node(s, current.cost + 1, insertionOrder++);
                 open.push(suc);
             }
         }
@@ -81,6 +82,7 @@ Solution GreedyBestFirstSearch(PuzzleState * init){
     ans.finish(INT_MAX); // infinite
     return  ans;//
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Solution AStar(PuzzleState* init)                                        ///
@@ -89,25 +91,29 @@ Solution GreedyBestFirstSearch(PuzzleState * init){
 ///  - This implementation does not uses reopening, once the heuristic is    ///
 ///    consistent, so the algorithm is optimal and would not use reopening   ///
 ////////////////////////////////////////////////////////////////////////////////
+
 Solution AStar(PuzzleState* init){
     Solution ans = Solution(init);
+    ULL insertionOrder = 0;
     std::priority_queue <Node, std::vector<Node>, AstarComp> open;
-    open.push(Node(init, 0));
+    open.push(Node(init, 0, insertionOrder++));
     std::set <ULL> closed;
     while (! open.empty()){
         Node current = open.top();
         open.pop();
         if (closed.find(current.state->getId()) == closed.end()){ // not in closed
-            ans.incExpanded();
             closed.insert(current.state->getId());
             if (current.state->isGoal()){
-
                 ans.finish(current.cost);
+                //ans.updateAvg(current.state->heuristic());
                 return ans;
             }
+            ans.incExpanded();
+            //ans.updateAvg(current.state->heuristic());
             for (State* s : current.state->succ()) {
+
+                Node suc = Node(s, current.cost + 1, insertionOrder++);
                 ans.updateAvg(s->heuristic());
-                Node suc = Node(s, current.cost + 1);
                 open.push(suc);
             }
         }
@@ -116,8 +122,6 @@ Solution AStar(PuzzleState* init){
     ans.finish(INT_MAX); // infinite
     return  ans;//
 }
-
-
 
 
 
