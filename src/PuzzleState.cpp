@@ -36,8 +36,8 @@ PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
             shift += 4;
         }
     }
-    for (int i = 0; i < 3; i++){
-        for (int j = 0; j < 3; j++){
+    for (int i = 0; i < this->size; i++){
+        for (int j = 0; j < this->size; j++){
             if (puzzle[i][j] == 0){
                 this->zeroY = i;
                 this->zeroX = j;
@@ -152,7 +152,7 @@ ULL PuzzleState::getId() {
 ///    representation                                                        ///
 ////////////////////////////////////////////////////////////////////////////////
 int PuzzleState::getPuzzleCell(int row, int col) {
-    int desloc = 4 * (row * 3 + col);
+    int desloc = 4 * (row * this->size + col);
     ULL mask = (ULL)15 << desloc;
     return (int)((this->id & mask) >> desloc);
 }
@@ -165,7 +165,7 @@ int PuzzleState::getPuzzleCell(int row, int col) {
 ///    desired value.                                                        ///
 ////////////////////////////////////////////////////////////////////////////////
 void PuzzleState::setPuzzleCell(int row, int col, int val) {
-    int desloc = 4 * (row * 3 + col);
+    int desloc = 4 * (row * this->size + col);
     ULL mask = (ULL)15 << desloc;
     ULL invMask = ~mask;
     this->id = this->id & invMask;

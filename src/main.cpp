@@ -1,9 +1,8 @@
-#include <iostream>
 
-#include "../include/searchAlgorithms.h"
+#include "../include/test.h"
 
 int main() {
-    std::vector<std::vector<int>> puzzle1 {
+    /*std::vector<std::vector<int>> puzzle1 {
         {8, 3, 5},
         {7, 2, 6},
         {0, 4, 1}
@@ -17,7 +16,6 @@ int main() {
             {3, 2, 7},
             {0, 1, 8}
     };
-
 
 
 
@@ -63,5 +61,9 @@ int main() {
     astar.print();
     std::cout<<std::endl;
 
+	return 0;
+	*/
+
+	testAll();
 	return 0;
 }
