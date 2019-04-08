@@ -17,7 +17,7 @@
 class GBFSComp{
 public:
     bool operator() (Node a, Node b){
-        int hDiff = a.state->heuristic() >= b.state->heuristic();
+        int hDiff = a.state->heuristic() - b.state->heuristic();
         if (hDiff < 0) return false;
         else if (hDiff > 0) return true;
         else return a.order < b.order;
