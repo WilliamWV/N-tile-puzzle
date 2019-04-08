@@ -45,7 +45,7 @@ void Solution::clear() {
     this->execTime = 0;
 }
 
-void Solution::print() {
+void Solution::printDebug() {
     std::cout<<"Solution: "<<std::endl;
     std::cout<<"Execution time = "<<((float)(this->execTime)) / CLOCKS_PER_SEC<<std::endl;
     std::cout<<"Expanded nodes = "<<this->expandedNodes<<std::endl;
@@ -54,4 +54,10 @@ void Solution::print() {
     std::cout<<"Average heuristic value = "<<this->avgHeuristic<<std::endl;
     std::cout<<"Heuristic nodes evaluated = "<<this->heuristicNodes<<std::endl;
 
+}
+
+void Solution::print() {
+	std::cout<<this->expandedNodes<<","<<this->optimalSolLenght<<","
+             << (double) this->execTime / CLOCKS_PER_SEC << "," 
+             << this->avgHeuristic<< ","<<this->initHeuristic<<std::endl;
 }

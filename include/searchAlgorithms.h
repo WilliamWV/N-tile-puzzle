@@ -43,6 +43,5 @@ public:
 Solution BFS_Graph(PuzzleState* init);
 Solution GreedyBestFirstSearch(PuzzleState* init);
 Solution AStar(PuzzleState* init);
-Solution IterativeDeepeningDFS(PuzzleState* init);
 
 #endif //SEARCHALGORITHMS_H

@@ -81,10 +81,7 @@ int main(int argc, char *argv[]) {
 			if (strncmp(argv[1], "-bfs", 16) == 0){
 				
 				for (int i = 0; i < puzzles.size(); i++){
-					std::cout <<"Solving puzzle with BFS: "<<std::endl;
-					printPuzzle(puzzles[i]);	
-					Solution bfs = BFS_Graph(new PuzzleState(puzzles[i]));
-					bfs.print();
+					BFS_Graph(new PuzzleState(puzzles[i])).print();
 				}
 			}
 			else if (strncmp(argv[1], "-idfs", 16) == 0){
@@ -92,21 +89,15 @@ int main(int argc, char *argv[]) {
 			}
 			else if (strncmp(argv[1], "-astar", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){
-					std::cout <<"Solving puzzle with A*: "<<std::endl;
-					printPuzzle(puzzles[i]);	
-					Solution astar = AStar(new PuzzleState(puzzles[i]));
-					astar.print();
+					AStar(new PuzzleState(puzzles[i])).print();
 				}
 			}
 			else if (strncmp(argv[1], "-idastar", 16) == 0){
 				std::cout<<"Not yet implemented"<<std::endl;
 			}
 			else if (strncmp(argv[1], "-gbfs", 16) == 0){
-				for (int i = 0; i < puzzles.size(); i++){
-					std::cout <<"Solving puzzle with GBFS*: "<<std::endl;
-					printPuzzle(puzzles[i]);	
-					Solution gbfs = GreedyBestFirstSearch(new PuzzleState(puzzles[i]));
-					gbfs.print();
+				for (int i = 0; i < puzzles.size(); i++){	
+					GreedyBestFirstSearch(new PuzzleState(puzzles[i])).print();
 				}
 			}
 		}

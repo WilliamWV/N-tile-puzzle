@@ -15,6 +15,7 @@ public:
     void incExpanded();
     void finish (int optCost);
     void clear ();
+    void printDebug();
     void print ();
 
 public:

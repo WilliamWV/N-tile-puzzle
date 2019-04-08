@@ -58,19 +58,19 @@ void testBFS(){
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
 	Solution bfs = BFS_Graph(new PuzzleState(puzzle3x3_1));
-    bfs.print();
+    bfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
 	bfs = BFS_Graph(new PuzzleState(puzzle3x3_2));
-    bfs.print();
+    bfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
 	bfs = BFS_Graph(new PuzzleState(puzzle3x3_3));
-    bfs.print();
+    bfs.printDebug();
     std::cout<<std::endl;
 	
 }
@@ -81,31 +81,31 @@ void testAstar(){
 	std::cout <<"Solving puzzle with A*: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
 	Solution astar = AStar(new PuzzleState(puzzle3x3_1));
-    astar.print();
+    astar.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with A*: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
 	astar = AStar(new PuzzleState(puzzle3x3_2));
-    astar.print();
+    astar.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with A*: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
 	astar = AStar(new PuzzleState(puzzle3x3_3));
-    astar.print();
+    astar.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with A*: "<<std::endl;
 	printPuzzle(puzzle4x4_1);	
 	astar = AStar(new PuzzleState(puzzle4x4_1));
-    astar.print();
+    astar.printDebug();
     std::cout<<std::endl;
 
 	//std::cout <<"Solving puzzle with A*: "<<std::endl;
 	//printPuzzle(puzzle4x4_2);	
 	//astar = AStar(new PuzzleState(puzzle4x4_2));
-    //astar.print();
+    //astar.printDebug();
     //std::cout<<std::endl;
 
 	
@@ -116,19 +116,19 @@ void testGBFS(){
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
 	Solution gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_1));
-    gbfs.print();
+    gbfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
 	gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_2));
-    gbfs.print();
+    gbfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
 	gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_3));
-    gbfs.print();
+    gbfs.printDebug();
     std::cout<<std::endl;
 }
 
