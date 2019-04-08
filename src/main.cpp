@@ -1,69 +1,106 @@
 
 #include "../include/test.h"
+#include <string.h>
+#include <cstdlib>
 
-int main() {
-    /*std::vector<std::vector<int>> puzzle1 {
-        {8, 3, 5},
-        {7, 2, 6},
-        {0, 4, 1}
-    };
-    std::vector<std::vector<int>> puzzle2 {
-            {3, 0, 8},
-            {7, 5, 2},
-            {1, 6, 4}
-    };std::vector<std::vector<int>> puzzle3 {
-            {5, 4, 6},
-            {3, 2, 7},
-            {0, 1, 8}
-    };
+#define DEBUG 0
 
+void printInstance(std::vector<int> inst){
+	for (int i = 0; i<inst.size(); i++){
+		std::cout<<inst[i]<<' ';
+	}
+	std::cout<<std::endl;
+}
 
+int main(int argc, char *argv[]) {
+   	if (DEBUG == 1){
+		testAll();
+	}
+	else{
 
-    std::cout<<"Puzzle 1" << std::endl;
-    Solution bfs = BFS_Graph(new PuzzleState(puzzle1));
-    std::cout<<"BFS-Graph: "<<std::endl;
-    bfs.print();
-    std::cout<<std::endl;
-    Solution gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle1));
-    std::cout<<"Greedy Best-First Search: "<<std::endl;
-    gbfs.print();
-    std::cout<<std::endl;
-    Solution astar = AStar(new PuzzleState(puzzle1));
-    std::cout<<"A*: "<<std::endl;
-    astar.print();
-    std::cout<<std::endl;
+		std::vector<std::vector<int>> instances;
+		std::vector<int> instance;
+		for (int i = 2; i < argc; i++){
+			int argLen = strlen(argv[i]);
+			if (argv[i][argLen-1] == ','){
+				argv[i][argLen-1] = '\0';
+				instance.push_back(atoi(argv[i]));
+				instances.push_back(instance);
+				instance.clear();			
+			}
+			else{
+				instance.push_back(atoi(argv[i]));
+			}
+		}
+		instances.push_back(instance);
+		std::vector<std::vector<std::vector<int>>> puzzles;
+		for (int i = 0; i < instances.size(); i++){
+			std::vector<std::vector<int>> puzzle;
+			int instSize = instances[i].size();	
+			if (instSize == 9){
+				for (int j = 0; j < 3; j++){
+					std::vector<int> line;
+					for(int k = 0; k < 3; k++){
+						line.push_back(instances[i][j * 3 + k]);
+					}
+					puzzle.push_back(line);
+					
+				}
+				
+				puzzles.push_back(puzzle);
+			}
+			else if (instSize == 16){
+				for (int j = 0; j < 4; j++){
+					std::vector<int> line;
+					for(int k = 0; k < 4; k++){
+						line.push_back(instances[i][j * 4 + k]);
+					}
+					puzzle.push_back(line);
+					
+				}
+				
+				puzzles.push_back(puzzle);
+			}		
+			else{
+				std::cout<<"The fololowing instance is not valid:";
+				printInstance(instances[i]);			
+			}
+			
+		}
+		if (argc > 1){
+			if (strncmp(argv[1], "-bfs", 16) == 0){
+				
+				for (int i = 0; i < puzzles.size(); i++){
+					std::cout <<"Solving puzzle with BFS: "<<std::endl;
+					printPuzzle(puzzles[i]);	
+					Solution bfs = BFS_Graph(new PuzzleState(puzzles[i]));
+					bfs.print();
+				}
+			}
+			else if (strncmp(argv[1], "-idfs", 16) == 0){
+				std::cout<<"Not yet implemented"<<std::endl;
+			}
+			else if (strncmp(argv[1], "-astar", 16) == 0){
+				for (int i = 0; i < puzzles.size(); i++){
+					std::cout <<"Solving puzzle with A*: "<<std::endl;
+					printPuzzle(puzzles[i]);	
+					Solution astar = AStar(new PuzzleState(puzzles[i]));
+					astar.print();
+				}
+			}
+			else if (strncmp(argv[1], "-idastar", 16) == 0){
+				std::cout<<"Not yet implemented"<<std::endl;
+			}
+			else if (strncmp(argv[1], "-gbfs", 16) == 0){
+				for (int i = 0; i < puzzles.size(); i++){
+					std::cout <<"Solving puzzle with GBFS*: "<<std::endl;
+					printPuzzle(puzzles[i]);	
+					Solution gbfs = GreedyBestFirstSearch(new PuzzleState(puzzles[i]));
+					gbfs.print();
+				}
+			}
+		}
 
-    std::cout<<"Puzzle 2" << std::endl;
-    bfs = BFS_Graph(new PuzzleState(puzzle2));
-    std::cout<<"BFS-Graph: "<<std::endl;
-    bfs.print();
-    std::cout<<std::endl;
-    gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle2));
-    std::cout<<"Greedy Best-First Search: "<<std::endl;
-    gbfs.print();
-    std::cout<<std::endl;
-    astar = AStar(new PuzzleState(puzzle2));
-    std::cout<<"A*: "<<std::endl;
-    astar.print();
-    std::cout<<std::endl;
-
-    std::cout<<"Puzzle 3" << std::endl;
-    bfs = BFS_Graph(new PuzzleState(puzzle3));
-    std::cout<<"BFS-Graph: "<<std::endl;
-    bfs.print();
-    std::cout<<std::endl;
-    gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3));
-    std::cout<<"Greedy Best-First Search: "<<std::endl;
-    gbfs.print();
-    std::cout<<std::endl;
-    astar = AStar(new PuzzleState(puzzle3));
-    std::cout<<"A*: "<<std::endl;
-    astar.print();
-    std::cout<<std::endl;
-
-	return 0;
-	*/
-
-	testAll();
+	}	
 	return 0;
 }

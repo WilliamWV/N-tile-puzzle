@@ -41,8 +41,6 @@ std::vector<std::vector<int>> puzzle4x4_1 {
 */
 
 
-
-
 void printPuzzle(std::vector<std::vector<int>> puzzle){
 	for (int i = 0; i < puzzle.size(); i++){
 		std::cout<<"| ";
