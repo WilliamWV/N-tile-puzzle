@@ -97,7 +97,7 @@ Solution AStar(PuzzleState* init){
     ULL insertionOrder = 0;
     std::priority_queue <Node, std::vector<Node>, AstarComp> open;
     open.push(Node(init, 0, insertionOrder++));
-    std::set <ULL> closed;
+    std::unordered_set <ULL> closed;
     while (! open.empty()){
         Node current = open.top();
         open.pop();
