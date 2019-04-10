@@ -39,8 +39,6 @@ public:
 
 private:
     int size;
-    int zeroX;
-    int zeroY;
     ULL id;
     int h;
 };

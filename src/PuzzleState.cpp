@@ -36,14 +36,6 @@ PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
             shift += 4;
         }
     }
-    for (int i = 0; i < this->size; i++){
-        for (int j = 0; j < this->size; j++){
-            if (puzzle[i][j] == 0){
-                this->zeroY = i;
-                this->zeroX = j;
-            }
-        }
-    }
     this->calculateHeuristic();
 }
 
@@ -72,6 +64,16 @@ PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
 std::vector<State*> PuzzleState::succ() {
 
     std::vector<State*> ans;
+    int zeroX;
+    int zeroY;
+    for (int i = 0; i<this->size; i++){
+        for (int j = 0; j<this->size; j++){
+            if(this->getPuzzleCell(i, j) == 0){
+                zeroX = j;
+                zeroY = i;
+            }
+        }
+    }
     //UP
     if (zeroY - 1 >= 0){
         PuzzleState* suc = new PuzzleState(this->id, this->size);
@@ -159,10 +161,6 @@ void PuzzleState::setPuzzleCell(int row, int col, int val) {
     this->id = this->id & invMask;
     this->id = this->id | (mask & ((ULL)val << desloc));
 
-    if (val == 0){
-        this->zeroX = col;
-        this->zeroY = row;
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,15 +172,6 @@ void PuzzleState::setPuzzleCell(int row, int col, int val) {
 PuzzleState::PuzzleState(ULL id, int size) {
     this->id = id;
     this->size = size;
-
-    for (int i = 0; i<this->size; i++){
-        for (int j = 0; j<this->size; j++){
-            if(this->getPuzzleCell(i, j) == 0){
-                this->zeroX = j;
-                this->zeroY = i;
-            }
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// int PuzzleState::calculateHeuristic()                                    ///
