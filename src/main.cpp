@@ -93,7 +93,9 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			else if (strncmp(argv[1], "-idastar", 16) == 0){
-				std::cout<<"Not yet implemented"<<std::endl;
+				for (int i = 0; i < puzzles.size(); i++){
+					IDAStar(new PuzzleState(puzzles[i])).print();
+				}
 			}
 			else if (strncmp(argv[1], "-gbfs", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){	

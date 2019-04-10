@@ -141,7 +141,23 @@ void testIterDeepDFS(){
 
 void testIDAstar(){
 	std::cout << "******  IDA*  ******"<<std::endl;
-	std::cout << "Not implemented Yet" <<std::endl;
+	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
+	printPuzzle(puzzle3x3_1);	
+	Solution idastar = IDAStar(new PuzzleState(puzzle3x3_1));
+    idastar.printDebug();
+    std::cout<<std::endl;
+
+	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
+	printPuzzle(puzzle3x3_2);	
+	idastar = IDAStar(new PuzzleState(puzzle3x3_2));
+    idastar.printDebug();
+    std::cout<<std::endl;
+
+	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
+	printPuzzle(puzzle3x3_3);	
+	idastar = IDAStar(new PuzzleState(puzzle3x3_3));
+    idastar.printDebug();
+    std::cout<<std::endl;
 }
 
 void testAll(){

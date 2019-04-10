@@ -123,6 +123,57 @@ Solution AStar(PuzzleState* init){
     return  ans;//
 }
 
+int f (Node* n){
+	return n->cost + n->state->heuristic();
+}
 
+#define PAIR_INT_SOL std::pair <int, Solution*>
+
+PAIR_INT_SOL IDARecSearch (Node* n, int f_limit, Solution* ans){
+	if (f(n) > f_limit){
+		return std::make_pair(f(n), nullptr);
+	}
+	if (n->state->isGoal()){
+		return std::make_pair(-1, ans);
+	}
+	int next_limit = INT_MAX;
+	ans->incExpanded();
+	for (State* s : n->state->succ()) {
+        if (s->heuristic() < INT_MAX){
+			Node* ni = new Node(s, n->cost + 1, 0);
+			ans->updateAvg(s->heuristic());
+			PAIR_INT_SOL sol = IDARecSearch(ni, f_limit, ans);
+			if (sol.second != nullptr){
+				return std::make_pair(-1, sol.second);
+			}
+			next_limit = std::min (next_limit, sol.first);
+		}
+    }
+	return std::make_pair(next_limit, nullptr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Solution IDAStar(PuzzleState* init)                                      ///
+///  - Use Iterative Deepening and heuristic value to reduce Iterative       ///
+///    deepening overhead while using less memory than other methods         ///
+///  - Once this algorithm does not use a priority_queue, the order fiels    ///
+///    of nodes is not used so it will always contains 0                     ///
+////////////////////////////////////////////////////////////////////////////////
+Solution IDAStar(PuzzleState* init){
+	Solution ans = Solution(init);
+	Node* root = new Node(init, 0, 0);
+	int f_limit = init->heuristic();
+	while (f_limit < INT_MAX){
+		PAIR_INT_SOL s = IDARecSearch(root, f_limit, &ans);
+		if (s.second != nullptr){
+			// It is possible to use f_limit here because the heuristic is 
+			// goal-aware
+			ans.finish(f_limit); 			
+			return ans;		
+		}
+		f_limit = s.first;	
+	}
+	return ans;
+}
 
 
