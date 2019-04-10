@@ -35,11 +35,13 @@ public:
     ULL int getId() override;
     int getPuzzleCell(int row, int col);
     void setPuzzleCell(int row, int col, int val);
+    void calculateHeuristic();
 
 private:
     int size;
     int zeroX;
     int zeroY;
     ULL id;
+    int h;
 };
 #endif //PUZZLESTATE_H

@@ -44,6 +44,7 @@ PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
             }
         }
     }
+    this->calculateHeuristic();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +77,7 @@ std::vector<State*> PuzzleState::succ() {
         PuzzleState* suc = new PuzzleState(this->id, this->size);
         suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY - 1, zeroX));
         suc->setPuzzleCell(zeroY - 1, zeroX, this->getPuzzleCell(zeroY, zeroX));
+        suc->calculateHeuristic();
         ans.push_back(suc);
     }
     //LEFT
@@ -83,6 +85,7 @@ std::vector<State*> PuzzleState::succ() {
         PuzzleState* suc = new PuzzleState(this->id, this->size);
         suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY, zeroX - 1));
         suc->setPuzzleCell(zeroY, zeroX - 1, this->getPuzzleCell(zeroY, zeroX));
+        suc->calculateHeuristic();
         ans.push_back(suc);
     }
     //RIGHT
@@ -90,6 +93,7 @@ std::vector<State*> PuzzleState::succ() {
         PuzzleState* suc = new PuzzleState(this->id, this->size);
         suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY, zeroX + 1));
         suc->setPuzzleCell(zeroY, zeroX + 1, this->getPuzzleCell(zeroY, zeroX));
+        suc->calculateHeuristic();
         ans.push_back(suc);
     }
     //DOWN
@@ -97,6 +101,7 @@ std::vector<State*> PuzzleState::succ() {
         PuzzleState* suc = new PuzzleState(this->id, this->size);
         suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY + 1, zeroX));
         suc->setPuzzleCell(zeroY + 1, zeroX, this->getPuzzleCell(zeroY, zeroX));
+        suc->calculateHeuristic();
         ans.push_back(suc);
     }
     return ans;
@@ -118,26 +123,9 @@ bool PuzzleState::isGoal() {
     }
     return true;
 }
-////////////////////////////////////////////////////////////////////////////////
-/// int PuzzleState::heuristic()                                             ///
-///  - Calculates the heuristic funtion of the state, based on the manhattan ///
-///    distance from each value's current position to the final position of  ///
-///    this value, this must not counts 0 because it is the representation   ///
-///    of the blank cell                                                     ///
-////////////////////////////////////////////////////////////////////////////////
-int PuzzleState::heuristic() {
 
-    int h = 0;
-    for (int i = 0; i < this->size; i++){
-        for(int j = 0; j < this->size; j++){
-            int puzzleCell = getPuzzleCell(i, j);
-            if (puzzleCell != 0){
-                h += abs(puzzleCell % this->size - j); // horizontal manhattan distance
-                h += abs(puzzleCell / this->size - i); // vertical manhattan distance
-            }
-        }
-    }
-    return h;
+int PuzzleState::heuristic() {
+    return this->h;
 
 }
 
@@ -192,6 +180,27 @@ PuzzleState::PuzzleState(ULL id, int size) {
             if(this->getPuzzleCell(i, j) == 0){
                 this->zeroX = j;
                 this->zeroY = i;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+/// int PuzzleState::calculateHeuristic()                                    ///
+///  - Calculates the heuristic funtion of the state, based on the manhattan ///
+///    distance from each value's current position to the final position of  ///
+///    this value, this must not counts 0 because it is the representation   ///
+///    of the blank cell                                                     ///
+////////////////////////////////////////////////////////////////////////////////
+
+void PuzzleState::calculateHeuristic(){
+
+    this->h = 0;
+    for (int i = 0; i < this->size; i++){
+        for(int j = 0; j < this->size; j++){
+            int puzzleCell = getPuzzleCell(i, j);
+            if (puzzleCell != 0){
+                this->h += abs(puzzleCell % this->size - j); // horizontal manhattan distance
+                this->h += abs(puzzleCell / this->size - i); // vertical manhattan distance
             }
         }
     }

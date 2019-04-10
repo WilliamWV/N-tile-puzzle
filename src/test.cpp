@@ -28,17 +28,12 @@ std::vector<std::vector<int>> puzzle4x4_1 {
 		{8, 12, 13, 14}
 };
 
-/**
-	There are some instances that require much more time than the 10 sec
-	specified. like this:
-	
-	std::vector<std::vector<int>> puzzle4x4_2 {
-		{13, 2, 10, 3},
-		{1, 12, 8, 4},
-		{5, 0, 9, 6},
-		{15, 14, 11, 7}
-	};
-*/
+std::vector<std::vector<int>> puzzle4x4_2 {
+		{4, 5, 7, 2},
+		{9, 14, 12, 13},
+		{0, 3, 6, 11},
+		{8, 1, 15, 10}
+};
 
 
 void printPuzzle(std::vector<std::vector<int>> puzzle){
@@ -77,36 +72,36 @@ void testBFS(){
 
 
 void testAstar(){
-	std::cout << "******  A*  ******"<<std::endl;
-	std::cout <<"Solving puzzle with A*: "<<std::endl;
-	printPuzzle(puzzle3x3_1);	
-	Solution astar = AStar(new PuzzleState(puzzle3x3_1));
+    std::cout << "******  A*  ******"<<std::endl;
+    std::cout <<"Solving puzzle with A*: "<<std::endl;
+    printPuzzle(puzzle3x3_1);	
+    Solution astar = AStar(new PuzzleState(puzzle3x3_1));
     astar.printDebug();
     std::cout<<std::endl;
 
-	std::cout <<"Solving puzzle with A*: "<<std::endl;
-	printPuzzle(puzzle3x3_2);	
-	astar = AStar(new PuzzleState(puzzle3x3_2));
+    std::cout <<"Solving puzzle with A*: "<<std::endl;
+    printPuzzle(puzzle3x3_2);	
+    astar = AStar(new PuzzleState(puzzle3x3_2));
     astar.printDebug();
     std::cout<<std::endl;
 
-	std::cout <<"Solving puzzle with A*: "<<std::endl;
-	printPuzzle(puzzle3x3_3);	
-	astar = AStar(new PuzzleState(puzzle3x3_3));
+    std::cout <<"Solving puzzle with A*: "<<std::endl;
+    printPuzzle(puzzle3x3_3);	
+    astar = AStar(new PuzzleState(puzzle3x3_3));
     astar.printDebug();
     std::cout<<std::endl;
 
-	std::cout <<"Solving puzzle with A*: "<<std::endl;
-	printPuzzle(puzzle4x4_1);	
-	astar = AStar(new PuzzleState(puzzle4x4_1));
+    std::cout <<"Solving puzzle with A*: "<<std::endl;
+    printPuzzle(puzzle4x4_1);	
+    astar = AStar(new PuzzleState(puzzle4x4_1));
     astar.printDebug();
     std::cout<<std::endl;
 
-	//std::cout <<"Solving puzzle with A*: "<<std::endl;
-	//printPuzzle(puzzle4x4_2);	
-	//astar = AStar(new PuzzleState(puzzle4x4_2));
-    //astar.printDebug();
-    //std::cout<<std::endl;
+    std::cout <<"Solving puzzle with A*: "<<std::endl;
+    printPuzzle(puzzle4x4_2);	
+    astar = AStar(new PuzzleState(puzzle4x4_2));
+    astar.printDebug();
+    std::cout<<std::endl;
 
 	
 }
