@@ -16,6 +16,7 @@ OBS: To docs about the PuzzleState structure read the comments of file
 #ifndef PUZZLESTATE_CPP
 #define PUZZLESTATE_CPP
 #include "../include/PuzzleState.h"
+#include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle)           ///
@@ -76,35 +77,27 @@ std::vector<State*> PuzzleState::succ() {
     }
     //UP
     if (zeroY - 1 >= 0){
-        PuzzleState* suc = new PuzzleState(this->id, this->size);
-        suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY - 1, zeroX));
-        suc->setPuzzleCell(zeroY - 1, zeroX, this->getPuzzleCell(zeroY, zeroX));
-        suc->calculateHeuristic();
-        ans.push_back(suc);
+        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
+        suc->swapCells(zeroY - 1, zeroX, zeroY, zeroX);        
+		ans.push_back(suc);
     }
     //LEFT
     if (zeroX - 1 >= 0){
-        PuzzleState* suc = new PuzzleState(this->id, this->size);
-        suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY, zeroX - 1));
-        suc->setPuzzleCell(zeroY, zeroX - 1, this->getPuzzleCell(zeroY, zeroX));
-        suc->calculateHeuristic();
-        ans.push_back(suc);
+        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
+        suc->swapCells(zeroY, zeroX - 1, zeroY, zeroX);             
+		ans.push_back(suc);
     }
     //RIGHT
     if (zeroX + 1 < this->size){
-        PuzzleState* suc = new PuzzleState(this->id, this->size);
-        suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY, zeroX + 1));
-        suc->setPuzzleCell(zeroY, zeroX + 1, this->getPuzzleCell(zeroY, zeroX));
-        suc->calculateHeuristic();
-        ans.push_back(suc);
+        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
+        suc->swapCells(zeroY, zeroX + 1, zeroY, zeroX);                
+		ans.push_back(suc);
     }
     //DOWN
     if (zeroY + 1 < this->size){
-        PuzzleState* suc = new PuzzleState(this->id, this->size);
-        suc->setPuzzleCell(zeroY, zeroX, this->getPuzzleCell(zeroY + 1, zeroX));
-        suc->setPuzzleCell(zeroY + 1, zeroX, this->getPuzzleCell(zeroY, zeroX));
-        suc->calculateHeuristic();
-        ans.push_back(suc);
+        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
+        suc->swapCells(zeroY + 1, zeroX, zeroY, zeroX);        
+		ans.push_back(suc);
     }
     return ans;
 }
@@ -150,7 +143,7 @@ int PuzzleState::getPuzzleCell(int row, int col) {
 ///  - Sets a specific cell of the puzzle to a value, this will bitwise      ///
 ///    operations to put 0000 where the value must be stored to clear the    ///
 ///    previous state, and then uses bitwise or to fill this space with the  ///
-///    desired value.                                                        ///
+///    desired value. Obsolete by swapCells()                                ///
 ////////////////////////////////////////////////////////////////////////////////
 void PuzzleState::setPuzzleCell(int row, int col, int val) {
     int desloc = 4 * (row * this->size + col);
@@ -162,14 +155,15 @@ void PuzzleState::setPuzzleCell(int row, int col, int val) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// PuzzleState::PuzzleState(ULL id, int size)                               ///
+/// PuzzleState::PuzzleState(ULL id, int size, int h)                        ///
 ///  - Initialization of a PuzzleState based on its unsigned long long       ///
 ///    representation                                                        ///
 ///  - this is used by the succ().                                           ///
 ////////////////////////////////////////////////////////////////////////////////
-PuzzleState::PuzzleState(ULL id, int size) {
+PuzzleState::PuzzleState(ULL id, int size, int h) {
     this->id = id;
     this->size = size;
+	this->h = h;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// int PuzzleState::calculateHeuristic()                                    ///
@@ -192,5 +186,34 @@ void PuzzleState::calculateHeuristic(){
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/// void PuzzleState::swapCells(int r, int c, int rb, int cb)                ///
+///  - This function substitute the previous use of setPuzzleCell(), being   ///
+///    faster to execute the two value changes on a movement and also        ///
+///    recalculating the heuristic value, this will use bitwise operations   ///
+///    to be fast.                                                           ///
+////////////////////////////////////////////////////////////////////////////////
+void PuzzleState::swapCells(int r, int c, int rb, int cb){
+	int desloc1 = 4 * (r * this->size + c);
+	int desloc2 = 4 * (rb * this->size + cb);
+	ULL mask1 = (ULL)15 << desloc1;
+	ULL mask2 = (ULL)15 << desloc2;
+
+	ULL invMask = ~(mask1 | mask2);
+
+	int val = this->getPuzzleCell(r, c);
+
+    this->id = this->id & invMask;
+	this->id = this->id | (mask2 & ((ULL) val << desloc2));
+	
+	this->h -= abs(val % this->size - c); // horizontal manhattan distance of the previos position
+    this->h -= abs(val / this->size - r); // vertical manhattan distance of the previos position
+	
+	this->h += abs(val % this->size - cb); // horizontal manhattan distance of the new position
+    this->h += abs(val / this->size - rb); // vertical manhattan distance of the new position
+
+}
+    
 
 #endif //PUZZLESTATE_CPP
