@@ -117,13 +117,11 @@ std::vector<State*> PuzzleState::succ() {
 ///                    | 6 7 8 |        | 8  9 10 11 |                       ///
 ///                                     |12 13 14 15 |                       ///
 ////////////////////////////////////////////////////////////////////////////////
+#define GOAL_3X3 0x876543210
+#define GOAL_4X4 0xFEDCBA9876543210
 bool PuzzleState::isGoal() {
-    for (int i = 0; i < this->size; i++){
-        for (int j = 0; j <this->size; j++){
-            if (getPuzzleCell(i, j) != j + i * this->size) return false;
-        }
-    }
-    return true;
+    if (this->size == 3) return this->id == GOAL_3X3;
+    else return this->id == GOAL_4X4;
 }
 
 int PuzzleState::heuristic() {
