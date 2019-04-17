@@ -52,19 +52,19 @@ void testBFS(){
 	std::cout << "******  Breadth-first Search  ******"<<std::endl;
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
-	Solution bfs = BFS_Graph(new PuzzleState(puzzle3x3_1));
+	Solution bfs = BFS_Graph(make_root_node(puzzle3x3_1));
     bfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
-	bfs = BFS_Graph(new PuzzleState(puzzle3x3_2));
+	bfs = BFS_Graph(make_root_node(puzzle3x3_2));
     bfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with BFS: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
-	bfs = BFS_Graph(new PuzzleState(puzzle3x3_3));
+	bfs = BFS_Graph(make_root_node(puzzle3x3_3));
     bfs.printDebug();
     std::cout<<std::endl;
 	
@@ -75,31 +75,31 @@ void testAstar(){
     std::cout << "******  A*  ******"<<std::endl;
     std::cout <<"Solving puzzle with A*: "<<std::endl;
     printPuzzle(puzzle3x3_1);	
-    Solution astar = AStar(new PuzzleState(puzzle3x3_1));
+    Solution astar = AStar(make_root_node(puzzle3x3_1));
     astar.printDebug();
     std::cout<<std::endl;
 
     std::cout <<"Solving puzzle with A*: "<<std::endl;
     printPuzzle(puzzle3x3_2);	
-    astar = AStar(new PuzzleState(puzzle3x3_2));
+    astar = AStar(make_root_node(puzzle3x3_2));
     astar.printDebug();
     std::cout<<std::endl;
 
     std::cout <<"Solving puzzle with A*: "<<std::endl;
     printPuzzle(puzzle3x3_3);	
-    astar = AStar(new PuzzleState(puzzle3x3_3));
+    astar = AStar(make_root_node(puzzle3x3_3));
     astar.printDebug();
     std::cout<<std::endl;
 
     std::cout <<"Solving puzzle with A*: "<<std::endl;
     printPuzzle(puzzle4x4_1);	
-    astar = AStar(new PuzzleState(puzzle4x4_1));
+    astar = AStar(make_root_node(puzzle4x4_1));
     astar.printDebug();
     std::cout<<std::endl;
 
     std::cout <<"Solving puzzle with A*: "<<std::endl;
     printPuzzle(puzzle4x4_2);	
-    astar = AStar(new PuzzleState(puzzle4x4_2));
+    astar = AStar(make_root_node(puzzle4x4_2));
     astar.printDebug();
     std::cout<<std::endl;
 
@@ -110,19 +110,19 @@ void testGBFS(){
 	std::cout << "******  Greedy Best-first Search  ******"<<std::endl;
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
-	Solution gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_1));
+	Solution gbfs = GreedyBestFirstSearch(make_root_node(puzzle3x3_1));
     gbfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
-	gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_2));
+	gbfs = GreedyBestFirstSearch(make_root_node(puzzle3x3_2));
     gbfs.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with GBFS: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
-	gbfs = GreedyBestFirstSearch(new PuzzleState(puzzle3x3_3));
+	gbfs = GreedyBestFirstSearch(make_root_node(puzzle3x3_3));
     gbfs.printDebug();
     std::cout<<std::endl;
 }
@@ -138,19 +138,19 @@ void testIDAstar(){
 	std::cout << "******  IDA*  ******"<<std::endl;
 	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
 	printPuzzle(puzzle3x3_1);	
-	Solution idastar = IDAStar(new PuzzleState(puzzle3x3_1));
+	Solution idastar = IDAStar(make_root_node(puzzle3x3_1));
     idastar.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
 	printPuzzle(puzzle3x3_2);	
-	idastar = IDAStar(new PuzzleState(puzzle3x3_2));
+	idastar = IDAStar(make_root_node(puzzle3x3_2));
     idastar.printDebug();
     std::cout<<std::endl;
 
 	std::cout <<"Solving puzzle with IDA*: "<<std::endl;
 	printPuzzle(puzzle3x3_3);	
-	idastar = IDAStar(new PuzzleState(puzzle3x3_3));
+	idastar = IDAStar(make_root_node(puzzle3x3_3));
     idastar.printDebug();
     std::cout<<std::endl;
 }

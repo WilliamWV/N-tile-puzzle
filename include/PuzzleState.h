@@ -25,22 +25,14 @@
      *
      * 
 */
-class PuzzleState : public State{
-public:
-    explicit PuzzleState(std::vector<std::vector<int>> puzzle);
-    explicit PuzzleState(ULL id, int size, int h);
-    std::vector<State*> succ() override;
-    bool isGoal() override ;
-    int heuristic() override ;
-    ULL int getId() override;
-    int getPuzzleCell(int row, int col);
-    void setPuzzleCell(int row, int col, int val);
-	void swapCells(int r1, int c1, int r2, int c2);
-    void calculateHeuristic();
 
-private:
-    int size;
-    ULL id;
-    int h;
-};
+Node* make_root_node(std::vector<std::vector<int>> puzzle);
+Node* copy_node(Node* other);
+std::vector<Node*> succ(Node* n);
+bool isGoal(Node* n);
+int heuristic(Node* n);
+int getPuzzleCell(Node* n, int row, int col);
+void swapCells(Node* n, int r1, int c1, int r2, int c2);
+void calculateHeuristic(Node* n);
+
 #endif //PUZZLESTATE_H

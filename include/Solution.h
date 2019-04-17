@@ -9,7 +9,7 @@
 #include "PuzzleState.h"
 class Solution {
 public:
-    Solution (PuzzleState *state);
+    Solution (Node *n);
 
     void updateAvg(int newH);
     void incExpanded();

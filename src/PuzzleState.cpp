@@ -18,30 +18,46 @@ OBS: To docs about the PuzzleState structure read the comments of file
 #include "../include/PuzzleState.h"
 #include <iostream>
 
+ULL nodeOrder = 0;
+
 ////////////////////////////////////////////////////////////////////////////////
-/// PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle)           ///
-///  - Initialization of a PuzzleState based matrix, where the puzzle cells  ///
-///    are represented                                                       ///
-///  - In fact, this will be used only when the user inputs the initial      ///
-///    matrix                                                                ///
+/// Node* make_root_state(std::vector<std::vector<int>> puzzle)              ///
+///  - Initialization of a Node from a matrix, where the puzzle cells are    ///
+///    represented                                                           ///
 ////////////////////////////////////////////////////////////////////////////////
-PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
-    
-    this->size = static_cast<int>(puzzle.size());
-    this->id = 0;
+Node* make_root_node(std::vector<std::vector<int>> puzzle) {
+    Node* ans = new Node();
+
+    ans->size = static_cast<int>(puzzle.size());
+    ans->state = 0;
     int shift = 0;
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
+    for (int i = 0; i < ans->size; i++) {
+        for (int j = 0; j < ans->size; j++) {
             ULL s = ((ULL) puzzle[i][j] << shift);
-            this->id = this->id | s;
+            ans->state = ans->state | s;
             shift += 4;
         }
     }
-    this->calculateHeuristic();
+    calculateHeuristic(ans);
+    ans->cost = 0;
+    nodeOrder = 0;
+    ans->order = nodeOrder++;
+    return ans;
+}
+
+
+Node* copy_node(Node* other){
+    Node* ans = new Node();
+    ans->size = other->size;
+    ans->state = other->state;
+    ans->h = other->h;
+    ans->cost = other->cost + 1;
+    ans->order = nodeOrder++;
+    return ans;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// std::vector<State*> PuzzleState::succ()                                  ///
+///  std::vector<Node*> succ(Node* n)                                        ///
 ///  - Used to obtain all the successor states of this state, these, will be ///
 ///    generated following the order of the four actions of moving the blank ///
 ///    space, that is:                                                       ///
@@ -62,14 +78,15 @@ PuzzleState::PuzzleState(std::vector<std::vector<int>> puzzle) {
 ///              | 4 0 5 |  ->  | 4 7 5 |                                    ///
 ///              | 6 7 8 |      | 6 0 8 |                                    ///
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<State*> PuzzleState::succ() {
 
-    std::vector<State*> ans;
+std::vector<Node*> succ(Node* n) {
+
+    std::vector<Node*> ans;
     int zeroX;
     int zeroY;
-    for (int i = 0; i<this->size; i++){
-        for (int j = 0; j<this->size; j++){
-            if(this->getPuzzleCell(i, j) == 0){
+    for (int i = 0; i<n->size; i++){
+        for (int j = 0; j<n->size; j++){
+            if(getPuzzleCell(n, i, j) == 0){
                 zeroX = j;
                 zeroY = i;
             }
@@ -77,33 +94,33 @@ std::vector<State*> PuzzleState::succ() {
     }
     //UP
     if (zeroY - 1 >= 0){
-        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
-        suc->swapCells(zeroY - 1, zeroX, zeroY, zeroX);        
-		ans.push_back(suc);
+        Node* suc = copy_node(n);
+        swapCells(suc, zeroY - 1, zeroX, zeroY, zeroX);        
+        ans.push_back(suc);
     }
     //LEFT
     if (zeroX - 1 >= 0){
-        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
-        suc->swapCells(zeroY, zeroX - 1, zeroY, zeroX);             
-		ans.push_back(suc);
+        Node* suc = copy_node(n);
+        swapCells(suc, zeroY, zeroX - 1, zeroY, zeroX);             
+        ans.push_back(suc);
     }
     //RIGHT
-    if (zeroX + 1 < this->size){
-        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
-        suc->swapCells(zeroY, zeroX + 1, zeroY, zeroX);                
-		ans.push_back(suc);
+    if (zeroX + 1 < n->size){
+        Node* suc = copy_node(n);
+        swapCells(suc, zeroY, zeroX + 1, zeroY, zeroX);                
+        ans.push_back(suc);
     }
     //DOWN
-    if (zeroY + 1 < this->size){
-        PuzzleState* suc = new PuzzleState(this->id, this->size, this->h);
-        suc->swapCells(zeroY + 1, zeroX, zeroY, zeroX);        
-		ans.push_back(suc);
+    if (zeroY + 1 < n->size){
+        Node* suc = copy_node(n);        
+        swapCells(suc, zeroY + 1, zeroX, zeroY, zeroX);        
+        ans.push_back(suc);
     }
     return ans;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// bool PuzzleState::isGoal()                                               ///
+/// bool isGoal(Node* n)                                                     ///
 ///  - Determines if the state is the goal state:                            ///
 ///                    | 0 1 2 |        | 0  1  2  3 |                       ///
 ///                    | 3 4 5 |   or   | 4  5  6  7 |                       ///
@@ -112,106 +129,75 @@ std::vector<State*> PuzzleState::succ() {
 ////////////////////////////////////////////////////////////////////////////////
 #define GOAL_3X3 0x876543210
 #define GOAL_4X4 0xFEDCBA9876543210
-bool PuzzleState::isGoal() {
-    if (this->size == 3) return this->id == GOAL_3X3;
-    else return this->id == GOAL_4X4;
+bool isGoal(Node* n) {
+    if (n->size == 3) return n->state == GOAL_3X3;
+    else return n->state == GOAL_4X4;
 }
 
-int PuzzleState::heuristic() {
-    return this->h;
+int heuristic(Node* n) {
+    return n->h;
 
-}
-
-ULL PuzzleState::getId() {
-    return this->id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// int PuzzleState::getPuzzleCell(int row, int col)                         ///
+/// int getPuzzleCell(Node* n, int row, int col)                             ///
 ///  - Obtains a specific value from the puzzle, this uses bitwise           ///
 ///    operations to extract only the cell value from the state              ///
 ///    representation                                                        ///
 ////////////////////////////////////////////////////////////////////////////////
-int PuzzleState::getPuzzleCell(int row, int col) {
-    int desloc = 4 * (row * this->size + col);
+int getPuzzleCell(Node* n, int row, int col) {
+    int desloc = 4 * (row * n->size + col);
     ULL mask = (ULL)15 << desloc;
-    return (int)((this->id & mask) >> desloc);
+    return (int)((n->state & mask) >> desloc);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// void PuzzleState::setPuzzleCell(int row, int col, int val)               ///
-///  - Sets a specific cell of the puzzle to a value, this will bitwise      ///
-///    operations to put 0000 where the value must be stored to clear the    ///
-///    previous state, and then uses bitwise or to fill this space with the  ///
-///    desired value. Obsolete by swapCells()                                ///
-////////////////////////////////////////////////////////////////////////////////
-void PuzzleState::setPuzzleCell(int row, int col, int val) {
-    int desloc = 4 * (row * this->size + col);
-    ULL mask = (ULL)15 << desloc;
-    ULL invMask = ~mask;
-    this->id = this->id & invMask;
-    this->id = this->id | (mask & ((ULL)val << desloc));
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-/// PuzzleState::PuzzleState(ULL id, int size, int h)                        ///
-///  - Initialization of a PuzzleState based on its unsigned long long       ///
-///    representation                                                        ///
-///  - this is used by the succ().                                           ///
-////////////////////////////////////////////////////////////////////////////////
-PuzzleState::PuzzleState(ULL id, int size, int h) {
-    this->id = id;
-    this->size = size;
-	this->h = h;
-}
-////////////////////////////////////////////////////////////////////////////////
-/// int PuzzleState::calculateHeuristic()                                    ///
+/// void calculateHeuristic(Node* n)                                         ///
 ///  - Calculates the heuristic funtion of the state, based on the manhattan ///
 ///    distance from each value's current position to the final position of  ///
 ///    this value, this must not counts 0 because it is the representation   ///
 ///    of the blank cell                                                     ///
 ////////////////////////////////////////////////////////////////////////////////
 
-void PuzzleState::calculateHeuristic(){
+void calculateHeuristic(Node* n){
 
-    this->h = 0;
-    for (int i = 0; i < this->size; i++){
-        for(int j = 0; j < this->size; j++){
-            int puzzleCell = getPuzzleCell(i, j);
+    n->h = 0;
+    for (int i = 0; i < n->size; i++){
+        for(int j = 0; j < n->size; j++){
+            int puzzleCell = getPuzzleCell(n, i, j);
             if (puzzleCell != 0){
-                this->h += abs(puzzleCell % this->size - j); // horizontal manhattan distance
-                this->h += abs(puzzleCell / this->size - i); // vertical manhattan distance
+                n->h += abs(puzzleCell % n->size - j); // horizontal manhattan distance
+                n->h += abs(puzzleCell / n->size - i); // vertical manhattan distance
             }
         }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// void PuzzleState::swapCells(int r, int c, int rb, int cb)                ///
+/// void swapCells(Node* n, int r, int c, int rb, int cb)                    ///
 ///  - This function substitute the previous use of setPuzzleCell(), being   ///
 ///    faster to execute the two value changes on a movement and also        ///
 ///    recalculating the heuristic value, this will use bitwise operations   ///
 ///    to be fast.                                                           ///
 ////////////////////////////////////////////////////////////////////////////////
-void PuzzleState::swapCells(int r, int c, int rb, int cb){
-	int desloc1 = 4 * (r * this->size + c);
-	int desloc2 = 4 * (rb * this->size + cb);
+void swapCells(Node* n, int r, int c, int rb, int cb){
+	int desloc1 = 4 * (r * n->size + c);
+	int desloc2 = 4 * (rb * n->size + cb);
 	ULL mask1 = (ULL)15 << desloc1;
 	ULL mask2 = (ULL)15 << desloc2;
 
 	ULL invMask = ~(mask1 | mask2);
 
-	int val = this->getPuzzleCell(r, c);
+	int val = getPuzzleCell(n, r, c);
 
-    this->id = this->id & invMask;
-	this->id = this->id | (mask2 & ((ULL) val << desloc2));
+    n->state = n->state & invMask;
+	n->state = n->state | (mask2 & ((ULL) val << desloc2));
 	
-	this->h -= abs(val % this->size - c); // horizontal manhattan distance of the previos position
-    this->h -= abs(val / this->size - r); // vertical manhattan distance of the previos position
+	n->h -= abs(val % n->size - c); // horizontal manhattan distance of the previos position
+    n->h -= abs(val / n->size - r); // vertical manhattan distance of the previos position
 	
-	this->h += abs(val % this->size - cb); // horizontal manhattan distance of the new position
-    this->h += abs(val / this->size - rb); // vertical manhattan distance of the new position
+	n->h += abs(val % n->size - cb); // horizontal manhattan distance of the new position
+    n->h += abs(val / n->size - rb); // vertical manhattan distance of the new position
 
 }
     

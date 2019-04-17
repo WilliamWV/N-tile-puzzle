@@ -7,12 +7,12 @@
 #include "../include/Solution.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Solution::Solution(PuzzleState *state)                                   ///
+/// Solution::Solution(Node* n)                                              ///
 ///  - initializes a solution with data from the initial state               ///
 ////////////////////////////////////////////////////////////////////////////////
-Solution::Solution(PuzzleState *state) {
+Solution::Solution(Node *n) {
     this->initTime = clock();
-    this->initHeuristic = state->heuristic();
+    this->initHeuristic = n->h;
     this->heuristicNodes = 1;
     this->avgHeuristic = this->initHeuristic;
     this->optimalSolLenght = 0;

@@ -9,28 +9,14 @@
 #include <cstdlib>
 
 #define ULL unsigned long long
+#define PuzzleState ULL
 
-class State {
-public:
-    //Define pure virtual functions to describe the state
-    virtual std::vector<State*> succ() = 0;
-    virtual bool isGoal() = 0;
-    virtual int heuristic() = 0;
-    virtual ULL getId() = 0;
-
-};
-
-class Node{
-
-public:
-    Node(State * state, int cost, ULL order){
-        this->state = state;
-        this->cost = cost;
-		this->order = order;
-    }
-    State * state;
+struct Node{
+    PuzzleState state;
+    int h;
+    int size;
     int cost;
-	ULL order;
+    ULL order;
 };
 
 

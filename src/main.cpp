@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 			if (strncmp(argv[1], "-bfs", 16) == 0){
 				
 				for (int i = 0; i < puzzles.size(); i++){
-					BFS_Graph(new PuzzleState(puzzles[i])).print();
+					BFS_Graph(make_root_node(puzzles[i])).print();
 				}
 			}
 			else if (strncmp(argv[1], "-idfs", 16) == 0){
@@ -89,17 +89,17 @@ int main(int argc, char *argv[]) {
 			}
 			else if (strncmp(argv[1], "-astar", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){
-					AStar(new PuzzleState(puzzles[i])).print();
+					AStar(make_root_node(puzzles[i])).print();
 				}
 			}
 			else if (strncmp(argv[1], "-idastar", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){
-					IDAStar(new PuzzleState(puzzles[i])).print();
+					IDAStar(make_root_node(puzzles[i])).print();
 				}
 			}
 			else if (strncmp(argv[1], "-gbfs", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){	
-					GreedyBestFirstSearch(new PuzzleState(puzzles[i])).print();
+					GreedyBestFirstSearch(make_root_node(puzzles[i])).print();
 				}
 			}
 		}
