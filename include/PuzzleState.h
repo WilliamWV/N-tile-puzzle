@@ -26,13 +26,13 @@
      * 
 */
 
-Node* make_root_node(std::vector<std::vector<int>> puzzle);
-Node* copy_node(Node* other);
-std::vector<Node*> succ(Node* n);
-bool isGoal(Node* n);
-int heuristic(Node* n);
-int getPuzzleCell(Node* n, int row, int col);
-void swapCells(Node* n, int r1, int c1, int r2, int c2);
-void calculateHeuristic(Node* n);
+Node make_root_node(std::vector<std::vector<int>> puzzle);
+Node copy_node(Node other);
+std::vector<Node> succ(Node n);
+bool isGoal(Node n);
+int heuristic(Node n);
+int getPuzzleCell(Node n, int row, int col);
+Node swapCells(Node n, int r1, int c1, int r2, int c2);
+int calculateHeuristic(Node n);
 
 #endif //PUZZLESTATE_H

@@ -12,30 +12,30 @@
 ///  - The algorithm is optimal for the Puzzle problem once every actions    ///
 ///    have the same cost.                                                   ///
 ////////////////////////////////////////////////////////////////////////////////
-Solution BFS_Graph(Node* init){
+Solution BFS_Graph(Node init){
     Solution ans = Solution(init);
     if (isGoal(init)){
         ans.finish(0);
         return ans;
     }
-    std::deque <Node*> open;
+    std::deque <Node> open;
     open.push_front(init);
     std::set <PuzzleState> closed;
-    closed.insert(init->state);
+    closed.insert(init.state);
     while (! open.empty()){
-        Node* current = open.front();
+        Node current = open.front();
         open.pop_front();
         ans.incExpanded();
-        for (Node * n : succ(current)){
+        for (Node n : succ(current)){
             if (isGoal(n)){
                 ans.updateAvg(heuristic(n));
-                ans.finish(n->cost);
+                ans.finish(n.cost);
                 return ans;
             }
 
-            if (closed.find(n->state) == closed.end()){ // not in closed
+            if (closed.find(n.state) == closed.end()){ // not in closed
                 ans.updateAvg(heuristic(n));
-                closed.insert(n->state);
+                closed.insert(n.state);
                 open.push_back(n);
             }
         }
@@ -52,24 +52,24 @@ Solution BFS_Graph(Node* init){
 ///    expansion order of the nodes.                                         ///
 ///  - The algorithm is not optimal.                                         ///
 ////////////////////////////////////////////////////////////////////////////////
-Solution GreedyBestFirstSearch(Node * init){
+Solution GreedyBestFirstSearch(Node init){
     Solution ans = Solution(init);
-    std::priority_queue <Node*, std::vector<Node*>, GBFSComp> open;
+    std::priority_queue <Node, std::vector<Node>, GBFSComp> open;
     open.push(init);
     std::unordered_set <PuzzleState> closed;
     while (! open.empty()){
-        Node* current = open.top();
+        Node current = open.top();
         open.pop();
-        if (closed.find(current->state) == closed.end()){ // not in closed
-            closed.insert(current->state);
+        if (closed.find(current.state) == closed.end()){ // not in closed
+            closed.insert(current.state);
             if (isGoal(current)){
-                ans.finish(current->cost);
+                ans.finish(current.cost);
                 return ans;
             }
             ans.incExpanded();
-            for (Node* n : succ(current)) {
+            for (Node n : succ(current)) {
 
-                ans.updateAvg(n->h);
+                ans.updateAvg(n.h);
                 open.push(n);
             }
         }
@@ -88,24 +88,24 @@ Solution GreedyBestFirstSearch(Node * init){
 ///    consistent, so the algorithm is optimal and would not use reopening   ///
 ////////////////////////////////////////////////////////////////////////////////
 
-Solution AStar(Node* init){
+Solution AStar(Node init){
     Solution ans = Solution(init);
-    std::priority_queue <Node*, std::vector<Node*>, AstarComp> open;
+    std::priority_queue <Node, std::vector<Node>, AstarComp> open;
     open.push(init);
     std::unordered_set <PuzzleState> closed;
     while (! open.empty()){
-        Node* current = open.top();
+        Node current = open.top();
         open.pop();
-        if (closed.find(current->state) == closed.end()){ // not in closed
-            closed.insert(current->state);
+        if (closed.find(current.state) == closed.end()){ // not in closed
+            closed.insert(current.state);
             if (isGoal(current)){
-                ans.finish(current->cost);
+                ans.finish(current.cost);
                 return ans;
             }
             ans.incExpanded();
-            for (Node* n : succ(current)) {
+            for (Node n : succ(current)) {
 
-                ans.updateAvg(n->h);
+                ans.updateAvg(n.h);
                 open.push(n);
             }
         }
@@ -115,13 +115,13 @@ Solution AStar(Node* init){
     return  ans;//
 }
 
-int f (Node* n){
-	return n->cost + n->h;
+int f (Node n){
+	return n.cost + n.h;
 }
 
 #define PAIR_INT_SOL std::pair <int, Solution*>
 
-PAIR_INT_SOL IDARecSearch (Node* n, int f_limit, Solution* ans){
+PAIR_INT_SOL IDARecSearch (Node n, int f_limit, Solution* ans){
     if (f(n) > f_limit){
         return std::make_pair(f(n), nullptr);
     }
@@ -130,9 +130,9 @@ PAIR_INT_SOL IDARecSearch (Node* n, int f_limit, Solution* ans){
     }
     int next_limit = INT_MAX;
     ans->incExpanded();
-    for (Node* ns : succ(n)) {
-        if (ns->h < INT_MAX){
-            ans->updateAvg(ns->h);
+    for (Node ns : succ(n)) {
+        if (ns.h < INT_MAX){
+            ans->updateAvg(ns.h);
             PAIR_INT_SOL sol = IDARecSearch(ns, f_limit, ans);
             if (sol.second != nullptr){
                 return std::make_pair(-1, sol.second);
@@ -150,9 +150,9 @@ PAIR_INT_SOL IDARecSearch (Node* n, int f_limit, Solution* ans){
 ///  - Once this algorithm does not use a priority_queue, the order fiels    ///
 ///    of nodes is not used so it will always contains 0                     ///
 ////////////////////////////////////////////////////////////////////////////////
-Solution IDAStar(Node* init){
+Solution IDAStar(Node init){
 	Solution ans = Solution(init);
-	int f_limit = init->h;
+	int f_limit = init.h;
 	while (f_limit < INT_MAX){
 		PAIR_INT_SOL s = IDARecSearch(init, f_limit, &ans);
 		if (s.second != nullptr){

@@ -17,11 +17,11 @@
 //Node comparision to Greedy Best first search
 class GBFSComp{
 public:
-    bool operator() (Node* a, Node* b){
-        int hDiff = a->h - b->h;
+    bool operator() (Node a, Node b){
+        int hDiff = a.h - b.h;
         if (hDiff < 0) return false;
         else if (hDiff > 0) return true;
-        else return a->order < b->order;
+        else return a.order < b.order;
     }
 };
 
@@ -29,21 +29,21 @@ public:
 //Node comparision to A*
 class AstarComp{
 public:
-    bool operator() (Node* a, Node* b){
-        int fDiff = (a->h + a->cost) - (b->h + b->cost);
+    bool operator() (Node a, Node b){
+        int fDiff = (a.h + a.cost) - (b.h + b.cost);
         if (fDiff < 0) return false;
         else if (fDiff > 0) return true;
         else {
-            int hDiff = a->h - b->h;
+            int hDiff = a.h - b.h;
             if (hDiff < 0) return false;
             else if (hDiff > 0) return true;
-            else return a->order < b->order; // heuristic is used as tie breaker
+            else return a.order < b.order; // heuristic is used as tie breaker
         }
     }
 };
-Solution BFS_Graph(Node* init);
-Solution GreedyBestFirstSearch(Node* init);
-Solution AStar(Node* init);
-Solution IDAStar(Node* init); 
+Solution BFS_Graph(Node init);
+Solution GreedyBestFirstSearch(Node init);
+Solution AStar(Node init);
+Solution IDAStar(Node init); 
 
 #endif //SEARCHALGORITHMS_H
