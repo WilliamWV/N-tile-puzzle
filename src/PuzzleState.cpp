@@ -42,17 +42,19 @@ Node make_root_node(std::vector<std::vector<int>> puzzle) {
     ans.cost = 0;
     nodeOrder = 0;
     ans.order = nodeOrder++;
+    ans.action = NONE;
     return ans;
 }
 
 
-Node copy_node(Node other){
+Node copy_node(Node other, BYTE action){
     Node ans;
     ans.size = other.size;
     ans.state = other.state;
     ans.h = other.h;
     ans.cost = other.cost + 1;
     ans.order = nodeOrder++;
+    ans.action = action;
     return ans;
 }
 
@@ -93,26 +95,26 @@ std::vector<Node> succ(Node n) {
         }
     }
     //UP
-    if (zeroY - 1 >= 0){
-        Node suc = copy_node(n);
+    if (zeroY - 1 >= 0 && n.action != DOWN){
+        Node suc = copy_node(n, UP);
         suc = swapCells(suc, zeroY - 1, zeroX, zeroY, zeroX);        
         ans.push_back(suc);
     }
     //LEFT
-    if (zeroX - 1 >= 0){
-        Node suc = copy_node(n);
+    if (zeroX - 1 >= 0 && n.action != RIGHT){
+        Node suc = copy_node(n, LEFT);
         suc = swapCells(suc, zeroY, zeroX - 1, zeroY, zeroX);             
         ans.push_back(suc);
     }
     //RIGHT
-    if (zeroX + 1 < n.size){
-        Node suc = copy_node(n);
+    if (zeroX + 1 < n.size && n.action != LEFT){
+        Node suc = copy_node(n, RIGHT);
         suc = swapCells(suc, zeroY, zeroX + 1, zeroY, zeroX);                
         ans.push_back(suc);
     }
     //DOWN
-    if (zeroY + 1 < n.size){
-        Node suc = copy_node(n);        
+    if (zeroY + 1 < n.size && n.action != UP){
+        Node suc = copy_node(n, DOWN);        
         suc = swapCells(suc, zeroY + 1, zeroX, zeroY, zeroX);        
         ans.push_back(suc);
     }
