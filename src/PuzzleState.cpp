@@ -18,7 +18,7 @@ OBS: To docs about the PuzzleState structure read the comments of file
 #include "../include/PuzzleState.h"
 #include <iostream>
 
-ULL nodeOrder = 0;
+unsigned int nodeOrder = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Node* make_root_state(std::vector<std::vector<int>> puzzle)              ///

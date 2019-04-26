@@ -20,7 +20,7 @@ Solution::Solution(Node n) {
 }
 
 void Solution::updateAvg(int newH) {
-    this->avgHeuristic = ((this->avgHeuristic * this->heuristicNodes) + newH) / (this->heuristicNodes + 1);
+    this->avgHeuristic += newH;
     this->heuristicNodes = this->heuristicNodes + 1;
 }
 
@@ -35,6 +35,11 @@ void Solution::incExpanded(){
 void Solution::finish(int optCost) {
     this->optimalSolLenght = optCost;
     this->execTime = clock() - this->initTime;
+    if (this->heuristicNodes > 1){ // nodos usam heurística
+        this->avgHeuristic /= this->heuristicNodes;
+    }
+    else
+        this->avgHeuristic = 0;
 }
 
 void Solution::clear() {

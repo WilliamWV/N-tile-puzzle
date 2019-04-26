@@ -2,7 +2,7 @@
 	This file contains the implementation of the required search algorithms
 */
 #include <iostream>
-#include "../include/searchAlgorithms.h"
+#include "../include/OpenList.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Solution BFS_Graph(Node* init)                                           ///
@@ -28,13 +28,11 @@ Solution BFS_Graph(Node init){
         ans.incExpanded();
         for (Node n : succ(current)){
             if (isGoal(n)){
-                ans.updateAvg(heuristic(n));
                 ans.finish(n.cost);
                 return ans;
             }
 
             if (closed.find(n.state) == closed.end()){ // not in closed
-                ans.updateAvg(heuristic(n));
                 closed.insert(n.state);
                 open.push_back(n);
             }
@@ -90,12 +88,14 @@ Solution GreedyBestFirstSearch(Node init){
 
 Solution AStar(Node init){
     Solution ans = Solution(init);
-    std::priority_queue <Node, std::vector<Node>, AstarComp> open;
-    open.push(init);
+    //std::priority_queue <Node, std::vector<Node>, AstarComp> open;
+    //open.push(init);
+    OpenList open = OpenList();
+    open.insert(init);
     std::unordered_set <PuzzleState> closed;
     while (! open.empty()){
-        Node current = open.top();
-        open.pop();
+        Node current = open.pop_min();
+        //open.pop();
         if (closed.find(current.state) == closed.end()){ // not in closed
             closed.insert(current.state);
             if (isGoal(current)){
@@ -106,7 +106,7 @@ Solution AStar(Node init){
             for (Node n : succ(current)) {
 
                 ans.updateAvg(n.h);
-                open.push(n);
+                open.insert(n);
             }
         }
 
@@ -166,4 +166,42 @@ Solution IDAStar(Node init){
 	return ans;
 }
 
+
+Solution* DepthLimitedSearch(Node n, int depth_limit, Solution* ans){
+    if (isGoal(n)) {
+        return ans;
+    }
+    if (depth_limit > 0){
+        //std::cout<<"4"<<std::endl;
+        ans->incExpanded();
+        //std::cout<<"5"<<std::endl;
+        for (Node ns : succ(n)) {
+            Solution* sol = DepthLimitedSearch(ns, depth_limit - 1, ans);
+            if (sol != nullptr) return sol;
+        }
+        //std::cout<<"6"<<std::endl;
+        
+    }
+    return nullptr;
+    
+}
+
+Solution IterativeDeepeningDFS(Node init)
+{
+    Solution ans = Solution(init);
+    //std::cout<<"1"<<std::endl;
+    int depth_limit = 0;
+    while (depth_limit < INT_MAX){
+        //std::cout<<"2"<<std::endl;
+        Solution* sol = DepthLimitedSearch(init, depth_limit, &ans);
+        //std::cout<<"3"<<std::endl;
+        if (sol != nullptr) {
+            ans.finish(depth_limit);
+            return ans;
+        }
+        depth_limit++;
+    }
+    return ans;
+
+}
 

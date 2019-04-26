@@ -85,7 +85,9 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			else if (strncmp(argv[1], "-idfs", 16) == 0){
-				std::cout<<"Not yet implemented"<<std::endl;
+				for (int i = 0; i < puzzles.size(); i++){
+					IterativeDeepeningDFS(make_root_node(puzzles[i])).print();
+				}
 			}
 			else if (strncmp(argv[1], "-astar", 16) == 0){
 				for (int i = 0; i < puzzles.size(); i++){

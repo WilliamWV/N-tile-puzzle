@@ -131,7 +131,23 @@ void testGBFS(){
 void testIterDeepDFS(){
 
 	std::cout << "******  Iterative Deepening DFS  ******"<<std::endl;
-	std::cout << "Not implemented Yet" <<std::endl;
+	std::cout <<"Solving puzzle with IDFS: "<<std::endl;
+	printPuzzle(puzzle3x3_1);	
+	Solution idfs = IterativeDeepeningDFS(make_root_node(puzzle3x3_1));
+    idfs.printDebug();
+    std::cout<<std::endl;
+
+	std::cout <<"Solving puzzle with IDFS: "<<std::endl;
+	printPuzzle(puzzle3x3_2);	
+	idfs = IterativeDeepeningDFS(make_root_node(puzzle3x3_2));
+    idfs.printDebug();
+    std::cout<<std::endl;
+
+	std::cout <<"Solving puzzle with IDFS: "<<std::endl;
+	printPuzzle(puzzle3x3_3);	
+	idfs = IterativeDeepeningDFS(make_root_node(puzzle3x3_3));
+    idfs.printDebug();
+    std::cout<<std::endl;
 }
 
 void testIDAstar(){

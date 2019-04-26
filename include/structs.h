@@ -17,14 +17,14 @@
 #define DOWN  3
 #define NONE  4
 
-#define BYTE char
+#define BYTE unsigned char
 
 struct Node{
     PuzzleState state;
-    int h;
-    int size;
-    int cost;
-    ULL order;
+    BYTE h;
+    BYTE size;
+    BYTE cost;
+    unsigned int order;
     BYTE action;
 };
 

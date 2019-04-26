@@ -27,6 +27,12 @@ do
 	./main -gbfs $var >> $outputFile
 done < "$puzzle8"
 
+echo -e "IDFS:\n" >> $outputFile
+while IFS= read var
+do
+	./main -idfs $var >> $outputFile
+done < "$puzzle8"
+
 echo -e "IDA*:\n" >> $outputFile
 while IFS= read var
 do
